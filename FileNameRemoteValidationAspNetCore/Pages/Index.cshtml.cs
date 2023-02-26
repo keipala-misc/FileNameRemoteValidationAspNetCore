@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
 
@@ -9,6 +10,10 @@ public class IndexModel : PageModel
     [Required]
     [PdfFileType(ErrorMessage = "Please select a PDF file.")]
     public List<IFormFile> Files { get; set; }
+
+    [BindProperty]
+    [FileName(ErrorMessage = "Name must end with .pdf")]
+    public string FileNames { get; set; }
 
     public IndexModel()
     {
@@ -39,6 +44,26 @@ public class PdfFileTypeAttribute : ValidationAttribute
             foreach (var file in files)
             {
                 if (file.ContentType != "application/pdf")
+                {
+                    return new ValidationResult(ErrorMessage);
+                }
+            }
+        }
+        return ValidationResult.Success;
+        
+    }
+}
+
+public class FileNameAttribute : ValidationAttribute
+{
+    protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+    {
+        if (value is string fileNamesString)
+        {
+            var fileNames = fileNamesString.Split("/");
+            foreach (var name in fileNames)
+            {
+                if (name.ToLower().EndsWith(".pdf"))
                 {
                     return new ValidationResult(ErrorMessage);
                 }

@@ -10,5 +10,10 @@
         <input asp-for="Files" multiple class="form-control-file" />
         <span asp-validation-for="Files" class="text-danger"></span>
     </div>
+    <div class="form-group">
+        <label asp-for="FileNames"></label>
+        <input asp-for="FileNames" class="form-control" />
+        <span asp-validation-for="FileNames" class="text-danger"></span>
+    </div>
     <button type="submit" class="btn btn-primary">Submit</button>
 </form>

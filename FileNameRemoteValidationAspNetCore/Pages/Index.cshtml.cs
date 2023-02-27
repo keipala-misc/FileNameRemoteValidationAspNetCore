@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿//TODO: make FileNames input hidden and populated with file names from Files input with simple javascript
+
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
@@ -31,9 +33,19 @@ public class IndexModel : PageModel
 
     public JsonResult OnPostCheckFileNames()
     {
-        if (FileNames.ToLower().EndsWith(".pdf"))
+        var errorMessage = "";
+        var fileNamesSplit = FileNames.Split("/");
+        foreach (var name in fileNamesSplit)
         {
-            return new JsonResult("String ends with .pdf");
+            // placeholder for proper filename validation
+            if (!name.ToLower().EndsWith(".pdf"))
+            {
+                errorMessage += $"{name} - Is Not A PDF File<br>";
+            }
+        }
+        if (errorMessage.Length > 0)
+        {
+            return new JsonResult(errorMessage);
         }
         return new JsonResult(true);
     }
